@@ -1,0 +1,115 @@
+{% extends "layout.html" %} {% block content %}
+<div class="content-section">
+  <div class="media">
+    <img class="rounded-circle account-img" src="{{ image_file }}" />
+    <div class="media-body">
+      <div class="row">
+        <h2 class="account-heading">{{ user.username }}</h2>
+      </div>
+
+      <div class="row" style="width: 100%;">
+        <div class="col" style="width: 40%;">
+          <p style="color: black; margin-bottom: 0px;">Email</p>
+          <p class="text-secondary">{{ user.email }}</p>
+
+          <p style="color: black; margin-bottom: 0px;">Data de Nascimento</p>
+          <p class="text-secondary">{{ user.data_nasc }}</p>
+
+          <p style="color: black; margin-bottom: 0px;">
+            Começou a trabalhar em
+          </p>
+          <p class="text-secondary">{{ user.start_work_date }}</p>
+
+          <p style="color: black; margin-bottom: 0px;">Estado que Trabalha</p>
+          <p class="text-secondary">{{ user.work_state }}</p>
+        </div>
+
+        <div class="cow" style="width: 40%;">
+          <p style="color: black; margin-bottom: 0px;">Cidade que Trabalha</p>
+          <p class="text-secondary">{{ user.work_city }}</p>
+
+          <p style="color: black; margin-bottom: 0px;">Grau de Escolaridade</p>
+          <p class="text-secondary">{{ user.instruction }}</p>
+
+          <p style="color: black; margin-bottom: 0px;">Empresa que Trabalha</p>
+          <p class="text-secondary">{{ user.company }}</p>
+
+          <a
+            class="btn btn-primary"
+            href="{{ url_for('user_interests', username=user.username) }}"
+          >
+            Tópicos de Interesses
+          </a>
+        </div>
+
+        <div class="cow" style="width: 20%;">
+          <p style="color: black; margin-bottom: 0px;">
+            Número de Recomendações
+          </p>
+          <p class="text-secondary">{{ user.recomendations.count() }}</p>
+
+          <p style="color: black; margin-bottom: 0px;">Número de Amigos</p>
+          <p class="text-secondary">{{ user.friends.count() }}</p>
+
+          <a
+            class="btn btn-primary"
+            href="{{ url_for('user_friends', username=user.username) }}"
+            >Amizades
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h1 class="mb-3">Solicitações de amizade:</h1>
+  {% for request in requests.items %}
+  <article class="media content-section">
+    <img
+      class="rounded-circle article-img"
+      src="{{ url_for('static', filename='profile_pics/' + request.image_file) }}"
+    />
+    <div class="media-body">
+      <div class="article-metadata">
+        <a
+          class="mr-2"
+          href="{{ url_for('user_posts', username=request.username) }}"
+          style="font-size: 1.3em;"
+          >{{ request.username }}</a
+        >
+      </div>
+      <div class="row">
+        <div class="col-1">
+          <a
+            class="btn btn-success"
+            href="{{ url_for('accept_friendship', nickname=request.username) }}"
+            >Aceitar</a
+          >
+        </div>
+        <div class="col-1">
+          <a
+            class="btn btn-danger"
+            href="{{ url_for('deny_friendship', nickname=request.username) }}"
+            >Recusar
+          </a>
+        </div>
+      </div>
+    </div>
+  </article>
+  {% endfor %} {% for page_num in requests.iter_pages(left_edge=1, right_edge=1,
+  left_current=1, right_current=2) %} {%if page_num%} {%if request.page ==
+  page_num %}
+  <a
+    class="btn btn-info mb-4"
+    href="{{url_for('friend_resquests', username=user.username, page=page_num)}}"
+  >
+    {{ page_num }}
+  </a>
+  {%else%}
+  <a
+    class="btn btn-outline-info mb-4"
+    href="{{url_for('friend_resquests', username=user.username, page=page_num)}}"
+  >
+    {{ page_num }}
+  </a>
+  {%endif%} {%else%} ... {%endif%} {% endfor %} {% endblock content %}
+</div>

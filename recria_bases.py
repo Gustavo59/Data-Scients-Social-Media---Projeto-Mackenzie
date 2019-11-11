@@ -11,6 +11,7 @@ def main():
     for x in topics:
         topic = InterestTopic(label=x)
         db.session.add(topic)
+
     db.session.commit()
 
 

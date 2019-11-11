@@ -18,9 +18,10 @@
             <th colspan="3">Interesses</th>
           </tr>
         </thead>
-        {% for i in range(0, interests|length , 3) %} {% if interests[i].label
-        in user_interest%}
+        {% for i in range(0, interests|length , 3) %}
+
         <tr>
+          {% if interests[i].label in user_interest %}
           <td>
             <input
               type="checkbox"
@@ -34,6 +35,20 @@
               interests[i].label
             }}</label>
           </td>
+          {%else%}
+          <td>
+            <input
+              type="checkbox"
+              name="interests"
+              value="{{ interests[i].label }}"
+            />
+          </td>
+          <td>
+            <label for="id_{{ interests[i].label }}">{{
+              interests[i].label
+            }}</label>
+          </td>
+          {% endif %} {% if interests[i+1].label in user_interest %}
           <td>&nbsp;</td>
           <td>&nbsp;</td>
           <td>&nbsp;</td>
@@ -51,6 +66,24 @@
               interests[i + 1].label
             }}</label>
           </td>
+          {% else %}
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>
+            <input
+              type="checkbox"
+              name="interests"
+              value="{{ interests[i + 1].label }}"
+            />
+          </td>
+          <td>
+            <label for="id_{{ interests[i + 1].label }}">{{
+              interests[i + 1].label
+            }}</label>
+          </td>
+          {% endif %} {% if interests[i+2].label in user_interest %}
           <td>&nbsp;</td>
           <td>&nbsp;</td>
           <td>&nbsp;</td>
@@ -68,37 +101,7 @@
               interests[i + 2].label
             }}</label>
           </td>
-        </tr>
-        {%else%}
-        <tr>
-          <td>
-            <input
-              type="checkbox"
-              name="interests"
-              value="{{ interests[i].label }}"
-            />
-          </td>
-          <td>
-            <label for="id_{{ interests[i].label }}">{{
-              interests[i].label
-            }}</label>
-          </td>
-          <td>&nbsp;</td>
-          <td>&nbsp;</td>
-          <td>&nbsp;</td>
-          <td>&nbsp;</td>
-          <td>
-            <input
-              type="checkbox"
-              name="interests"
-              value="{{ interests[i + 1].label }}"
-            />
-          </td>
-          <td>
-            <label for="id_{{ interests[i + 1].label }}">{{
-              interests[i + 1].label
-            }}</label>
-          </td>
+          {% else %}
           <td>&nbsp;</td>
           <td>&nbsp;</td>
           <td>&nbsp;</td>
@@ -115,8 +118,9 @@
               interests[i + 2].label
             }}</label>
           </td>
+          {%endif%}
         </tr>
-        {%endif%} {% endfor %}
+        {% endfor %}
       </table>
     </fieldset>
     <div class="form-group">

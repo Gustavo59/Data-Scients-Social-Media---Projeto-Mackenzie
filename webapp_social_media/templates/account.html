@@ -4,9 +4,28 @@
 	  <div class="media">
 	    <img class="rounded-circle account-img" src="{{image_file}}">
 	    <div class="media-body">
-	      <h2 class="account-heading">{{current_user.username}}</h2>
-          <p class="text-secondary">{{current_user.email}}</p>
-          <p>Recomendações({{current_user.recomendations.count()}})</p>
+            <div class="row">
+                <div class="col-md-8">
+                    <h2 class="account-heading">{{current_user.username}}</h2>
+                    <p class="text-secondary">{{current_user.email}}</p>
+                    <p>Recomendações: {{current_user.recomendations.count()}}</p>                    
+                    <p>Amigos: {{current_user.number_friends}}</p>
+                </div>
+                <div class="col-md-4">
+                    <a
+                    class="btn btn-warning"
+                    href="{{ url_for('friend_requests', username=current_user.username) }}"
+                    >Solicitações de Amizade ({{current_user.requests.count()}})
+                    </a>
+
+                    <a
+                    class="btn btn-primary"
+                    href="{{ url_for('user_friends', username=current_user.username) }}"
+                    style="margin-top:5%"
+                    >Amigos
+                    </a>
+                </div>
+            </div>	    
 	    </div>
 	  </div>
         <form method="POST" action="" enctype='multipart/form-data'>
@@ -114,6 +133,7 @@
 
                 <div class="form-group">
                     {{ form.instruction.label(class="form-control-label") }}
+                    
                     {% if form.instruction.errors %}
                         {{ form.instruction(class="form-control form-control-lg is-invalid") }}
                         <div class="invalid-feedback">
@@ -141,7 +161,7 @@
                 </div>
 
                 <div class="form-group">
-                        <a class="article-title" href="{{ url_for('interests', username=current_user.username) }}">Interesses</a>
+                    <a class="btn btn-info" href="{{ url_for('interests', username=current_user.username) }}">Interesses</a>
                 </div>
             </fieldset>
 

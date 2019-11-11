@@ -9,17 +9,26 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 
-'''followers = db.Table('followers',
-    db.Column('follower_id', db.Integer, db.ForeignKey('user.id')),
-    db.Column('followed_id', db.Integer, db.ForeignKey('user.id'))
-)'''
-
 recomendations = db.Table('recomendations',
                           db.Column('recommender_id', db.Integer,
                                     db.ForeignKey('user.id')),
                           db.Column('recommended_id', db.Integer,
                                     db.ForeignKey('user.id'))
                           )
+
+requests = db.Table('requests',
+                    db.Column('requester_id', db.Integer,
+                              db.ForeignKey('user.id')),
+                    db.Column('requested_id', db.Integer,
+                              db.ForeignKey('user.id'))
+                    )
+
+friends = db.Table('friends',
+                   db.Column('friend_id', db.Integer,
+                             db.ForeignKey('user.id')),
+                   db.Column('your_id', db.Integer,
+                             db.ForeignKey('user.id'))
+                   )
 
 
 class Post(db.Model):
@@ -53,6 +62,7 @@ class User(db.Model, UserMixin):
                            default='default.jpg')
     password = db.Column(db.String(60), nullable=False)
     user_type = db.Column(db.String(120), nullable=False)
+    number_friends = db.Column(db.Integer, nullable=False)
     interests = db.relationship(
         'InterestTopicUser', backref='interested', lazy=True)
     posts = db.relationship('Post', backref='author', lazy=True)
@@ -65,6 +75,24 @@ class User(db.Model, UserMixin):
                                   backref=db.backref(
                                       'recomendations', lazy='dynamic'),
                                   lazy='dynamic')
+    requested = db.relationship('User',
+                                secondary=requests,
+                                primaryjoin=(
+                                    requests.c.requester_id == id),
+                                secondaryjoin=(
+                                    requests.c.requested_id == id),
+                                backref=db.backref(
+                                    'requests', lazy='dynamic'),
+                                lazy='dynamic')
+    friended = db.relationship('User',
+                               secondary=friends,
+                               primaryjoin=(
+                                   friends.c.friend_id == id),
+                               secondaryjoin=(
+                                   friends.c.your_id == id),
+                               backref=db.backref(
+                                   'friends', lazy='dynamic'),
+                               lazy='dynamic')
 
     def recommend(self, user):
         if not self.is_recommending(user):
@@ -82,22 +110,31 @@ class User(db.Model, UserMixin):
     def recommended_posts(self):
         return Post.query.join(recomendations, (recomendations.c.recommended_id == Post.user_id)).filter(recomendations.c.recommender_id == self.id).order_by(Post.date_posted.desc())
 
-    '''def follow(self, user):
-        if not self.is_following(user):
-            self.followed.append(user)
+    def request(self, user):
+        if not self.is_requesting(user):
+            self.requested.append(user)
             return self
 
-    def unfollow(self, user):
-        if self.is_following(user):
-            self.followed.remove(user)
+    def unrequest(self, user):
+        if self.is_requesting(user):
+            self.requested.remove(user)
             return self
 
-    def is_following(self, user):
-        return self.followed.filter(followers.c.followed_id == user.id).count() > 0
+    def is_requesting(self, user):
+        return self.requested.filter(requests.c.requested_id == user.id).count() > 0
 
+    def become_friend(self, user):
+        if not self.is_friend(user):
+            self.friended.append(user)
+            return self
 
-    def followed_posts(self):
-        return Post.query.join(followers, (followers.c.followed_id == Post.user_id)).filter(followers.c.follower_id == self.id).order_by(Post.date_posted.desc())    '''
+    def unfriend(self, user):
+        if self.is_friend(user):
+            self.friended.remove(user)
+            return self
+
+    def is_friend(self, user):
+        return self.friended.filter(friends.c.your_id == user.id).count() > 0
 
     def __repr__(self):
         return f"User('{self.id}','{self.username}', '{self.email}', '{self.image_file}', '{self.user_type}')"

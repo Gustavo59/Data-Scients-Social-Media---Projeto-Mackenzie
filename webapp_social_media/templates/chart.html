@@ -1,0 +1,204 @@
+{% extends "layout.html" %} {% block content %}
+<div class="content-section">
+  <h1>Número médio de amigos dos membros da rede social</h1>
+  <!-- bar chart canvas element -->
+  <canvas id="myChart" width="1000" height="400"></canvas>
+  <br />
+  <br />
+  <br />
+
+  <h1>Lista com os 10 membros mais conectados</h1>
+  <canvas id="myChart2" width="1000" height="400"></canvas>
+  <br />
+  <br />
+  <br />
+
+  <h1>Relação entre o número de amigos e o estado onde mora</h1>
+  <canvas id="myChart3" width="1000" height="400"></canvas>
+  <br />
+  <br />
+  <br />
+</div>
+
+<script>
+  var ctx = document.getElementById("myChart");
+
+  Chart.defaults.global.responsive = false;
+
+  var myChart = new Chart(ctx, {
+    type: "bar",
+    data: {
+      labels: [{% for item in labels_1 %}
+             "{{item}}",
+            {% endfor %}],
+      datasets: [
+        {
+          label: '{{ legend_1 }}',
+      fill: true,
+      lineTension: 0.1,
+      backgroundColor:
+      [{% for item in colors_1 %}
+             "{{item}}",
+            {% endfor %}],
+      borderColor:
+      [{% for item in colors_1 %}
+             "{{item}}",
+            {% endfor %}],
+      borderCapStyle: 'butt',
+      borderDash: [],
+      borderDashOffset: 0.0,
+      borderJoinStyle: 'miter',
+      pointBorderColor: "rgba(75,192,192,1)",
+      pointBackgroundColor: "#fff",
+      pointBorderWidth: 1,
+      pointHoverRadius: 5,
+      pointHoverBackgroundColor: "rgba(75,192,192,1)",
+      pointHoverBorderColor: "rgba(220,220,220,1)",
+      pointHoverBorderWidth: 2,
+      pointRadius: 1,
+      pointHitRadius: 10,
+      data : [{% for item in values_1 %}
+                {{item}},
+              {% endfor %}],
+      spanGaps: false
+        }
+      ]
+    },
+    options: {
+      scales: {
+        yAxes: [
+          {
+            ticks: {
+              min: 0,
+              max: 100,
+              callback: function(value){return value+ "%"}
+            },
+            scaleLabel: {
+              display: true,
+              labelString: "Percentage"
+            }
+          }
+        ]
+      },
+      legend:{
+        position: 'right'
+      }
+    }
+  });
+
+  var ctx2 = document.getElementById("myChart2");
+
+  var myChart2 = new Chart(ctx2, {
+    type: "horizontalBar",
+    data: {
+      labels: [{% for item in labels_2 %}
+             "{{item}}",
+            {% endfor %}],
+      datasets: [
+        {
+          label: '{{ legend_2 }}',
+      fill: true,
+      lineTension: 0.1,
+      backgroundColor:
+      [{% for item in colors_2 %}
+             "{{item}}",
+            {% endfor %}],
+      borderColor:
+      [{% for item in colors_2 %}
+             "{{item}}",
+            {% endfor %}],
+      borderCapStyle: 'butt',
+      borderDash: [],
+      borderDashOffset: 0.0,
+      borderJoinStyle: 'miter',
+      pointBorderColor: "rgba(75,192,192,1)",
+      pointBackgroundColor: "#fff",
+      pointBorderWidth: 1,
+      pointHoverRadius: 5,
+      pointHoverBackgroundColor: "rgba(75,192,192,1)",
+      pointHoverBorderColor: "rgba(220,220,220,1)",
+      pointHoverBorderWidth: 2,
+      pointRadius: 1,
+      pointHitRadius: 10,
+      data : [{% for item in values_2 %}
+                {{item}},
+              {% endfor %}],
+      spanGaps: false
+        }
+      ]
+    },
+    options: {
+      scales: {
+        xAxes: [
+          {
+            ticks: {
+              beginAtZero: true
+            }
+          }
+        ]
+      },
+      legend:{
+        position: 'right'
+      }
+    }
+  });
+
+  var ctx3 = document.getElementById("myChart3");
+
+  var myChart3 = new Chart(ctx3, {
+    type: "pie",
+    data: {
+      labels: [{% for item in labels_3 %}
+             "{{item}}",
+            {% endfor %}],
+      datasets: [
+        {
+          label: '{{ legend_3 }}',
+      fill: true,
+      lineTension: 0.1,
+      backgroundColor:
+      [{% for item in colors_3 %}
+             "{{item}}",
+            {% endfor %}],
+      borderColor:
+      [{% for item in colors_3 %}
+             "{{item}}",
+            {% endfor %}],
+      borderCapStyle: 'butt',
+      borderDash: [],
+      borderDashOffset: 0.0,
+      borderJoinStyle: 'miter',
+      pointBorderColor: "rgba(75,192,192,1)",
+      pointBackgroundColor: "#fff",
+      pointBorderWidth: 1,
+      pointHoverRadius: 5,
+      pointHoverBackgroundColor: "rgba(75,192,192,1)",
+      pointHoverBorderColor: "rgba(220,220,220,1)",
+      pointHoverBorderWidth: 2,
+      pointRadius: 1,
+      pointHitRadius: 10,
+      data : [{% for item in values_3 %}
+                {{item}},
+              {% endfor %}],
+      spanGaps: false
+        }
+      ]
+    },
+    options: {
+      scales: {
+        xAxes: [
+          {
+            ticks: {
+              beginAtZero: true
+            }
+          }
+        ]
+      },
+      legend:{
+        position: 'right'
+      }
+    }
+  });
+</script>
+
+{% endblock content %}
